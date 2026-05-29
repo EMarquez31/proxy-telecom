@@ -20,12 +20,11 @@ app.get('/cliente', async (req, res) => {
         }
       }
     )
-    const texto = await response.text()
-    const texto2 = texto.replace(/["\[\]{}\\]/g, '').trim()
-    console.log('TEXTO CRUDO:', texto)
-    const contrato = texto2.match(/^(\d+)/)?.[1] || null
-    const refPag = texto2.match(/Ref\.Pag\.:(\S+)/)?.[1] || null
-    const dirSer = texto2.match(/Dir\.Ser\.:\s*(.+?)(\s*)$/)?.[1]?.trim() || null
+    const data = await response.json()
+    const item = data[0]
+    const contrato = item.id ? String(item.id) : null
+    const refPag = item.text?.match(/Ref\.Pag\.:(\S+)/)?.[1] || null
+    const dirSer = item.text?.match(/Dir\.Ser\.:\s*(.+)$/)?.[1]?.trim() || null
     res.json({ contrato: contrato, referencia_pago: refPag, direccion_servicio: dirSer })
   } catch (e) {
     res.status(500).json({ error: 'Error consultando la API' })
