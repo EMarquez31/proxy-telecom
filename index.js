@@ -50,9 +50,19 @@ app.get('/referencia', async (req, res) => {
         body: JSON.stringify({ datos: { referencia_pago: referencia_pago } })
       }
     )
-    const texto = await response.text()
-    console.log('REFERENCIA CRUDO:', texto)
-    res.json({ raw: texto })
+    const data = await response.json()
+    const c = data.contrato
+    const direccion = c.direcciones?.[0]?.direccion || null
+    const productos = c.productos?.map(p => p._producto).join(', ') || null
+
+    res.json({
+      cliente: c._cliente,
+      contrato_id: String(c.id),
+      referencia_pago: c.referencia_pago,
+      direccion: direccion,
+      productos: productos,
+      sucursal: c._sucursal
+    })
   } catch(e) {
     res.status(500).json({ error: e.message })
   }
