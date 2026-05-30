@@ -33,7 +33,7 @@ app.get('/cliente', async (req, res) => {
   }
 })
 
-app.post('/referencia', async (req, res) => {
+app.get('/referencia', async (req, res) => {
   const { referencia_pago } = req.query
   if (!referencia_pago) return res.status(400).json({ error: 'Falta referencia_pago' })
 
